@@ -7,6 +7,7 @@
     "./shell": "./src/shell.tsx",
     "./cart": "./src/cart.ts",
     "./format": "./src/format.ts",
+    "./metadata": "./src/metadata.ts",
     "./restaurants": "./src/restaurants.ts"
   },
   "peerDependencies": {

@@ -5,7 +5,7 @@
  */
 const { spawn, spawnSync } = require('child_process');
 
-const ZONES = ['container', 'browse', 'restaurant-order', 'user-profile'];
+const ZONES = ['container', ...require('./zones.json').map((zone) => zone.name)];
 
 /** No Windows, shell: true cria um cmd intermediário, então matamos a árvore inteira. */
 function killTree(child) {

@@ -1,0 +1,5 @@
+[
+  { "name": "browse", "port": 3001, "routes": ["/"] },
+  { "name": "restaurant-order", "port": 3002, "routes": ["/restaurant/:id"] },
+  { "name": "user-profile", "port": 3003, "routes": ["/user-profile"] }
+]

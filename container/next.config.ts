@@ -1,28 +1,17 @@
 import type { NextConfig } from 'next';
+import zones from '../zones.json';
 
 /**
  * CONTAINER: a zona principal, dona do domínio.
  *
  * Não renderiza páginas. Encaminha cada rota, e os assets da zona dona, para a zona certa.
- * As URLs vêm de variáveis de ambiente, então mudam por ambiente sem mexer no código.
+ * As zonas vêm de zones.json. Cada URL pode ser trocada por variável de ambiente,
+ * por exemplo BROWSE_URL, então muda por ambiente sem mexer no código.
  */
-const ZONES = [
-  {
-    name: 'browse',
-    url: process.env.BROWSE_URL ?? 'http://localhost:3001',
-    routes: ['/'],
-  },
-  {
-    name: 'restaurant-order',
-    url: process.env.RESTAURANT_ORDER_URL ?? 'http://localhost:3002',
-    routes: ['/restaurant/:id'],
-  },
-  {
-    name: 'user-profile',
-    url: process.env.USER_PROFILE_URL ?? 'http://localhost:3003',
-    routes: ['/user-profile'],
-  },
-];
+const ZONES = zones.map((zone) => {
+  const envVar = `${zone.name.toUpperCase().replace(/-/g, '_')}_URL`;
+  return { ...zone, url: process.env[envVar] ?? `http://localhost:${zone.port}` };
+});
 
 /** Rewrites para as rotas de cada zona e para os assets em <zona>-static/. */
 const zoneRewrites = (zone: (typeof ZONES)[number]) => [

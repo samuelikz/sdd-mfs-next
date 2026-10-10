@@ -1,3 +1,4 @@
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { findRestaurant } from './restaurants';
 
@@ -90,6 +91,11 @@ async function writeStoredItems(items: StoredItem[]) {
   });
 }
 
+/** Refaz o layout compartilhado, onde fica o contador do carrinho no cabeçalho. */
+function revalidateCart() {
+  revalidatePath('/', 'layout');
+}
+
 /** Lê o carrinho da requisição atual, com nome e preço vindos do catálogo. */
 export async function readCart(): Promise<Order[]> {
   const entries = await readCartEntries();
@@ -109,6 +115,7 @@ export async function addItemToCart(restaurantId: string, itemIndex: number): Pr
 
   const updated = [...entries.map((entry) => entry.stored), { restaurantId: restaurant.id, itemIndex }];
   await writeStoredItems(updated);
+  revalidateCart();
   return true;
 }
 
@@ -122,5 +129,6 @@ export async function removeItemFromCart(index: number): Promise<boolean> {
 
   const kept = entries.filter((_, position) => position !== index).map((entry) => entry.stored);
   await writeStoredItems(kept);
+  revalidateCart();
   return true;
 }
