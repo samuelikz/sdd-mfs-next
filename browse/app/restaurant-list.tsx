@@ -1,21 +1,28 @@
 'use client';
 
-import { Search, SearchX, Star } from 'lucide-react';
-import { RESTAURANTS } from '@feedme/shared/restaurants';
+import { Beef, Fish, LucideIcon, Pizza, Sandwich, Search, SearchX, Star } from 'lucide-react';
+import type { CatalogRestaurant, RestaurantIconName } from '@feedme/shared/catalog';
 import { useState } from 'react';
 
 /** Filtro que mostra todas as culinárias. */
 const ALL_CUISINES = 'Todas';
 
-const CUISINES = [ALL_CUISINES, ...new Set(RESTAURANTS.map((restaurant) => restaurant.cuisine))];
+/** Ícone de cada restaurante. O catálogo chega pela API só com o nome do ícone. */
+const ICONS: Record<RestaurantIconName, LucideIcon> = {
+  beef: Beef,
+  fish: Fish,
+  pizza: Pizza,
+  sandwich: Sandwich,
+};
 
-/** Busca, filtro por culinária e lista de restaurantes. */
-export function RestaurantList() {
+/** Busca, filtro por culinária e lista de restaurantes. Os dados vêm da zona de pedidos, pela página. */
+export function RestaurantList({ restaurants }: { restaurants: CatalogRestaurant[] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCuisine, setSelectedCuisine] = useState(ALL_CUISINES);
 
+  const cuisines = [ALL_CUISINES, ...new Set(restaurants.map((restaurant) => restaurant.cuisine))];
   const term = searchTerm.toLowerCase();
-  const filtered = RESTAURANTS.filter((restaurant) => {
+  const filtered = restaurants.filter((restaurant) => {
     const matchesCuisine = selectedCuisine === ALL_CUISINES || restaurant.cuisine === selectedCuisine;
     const matchesSearch = `${restaurant.name} ${restaurant.cuisine}`.toLowerCase().includes(term);
     return matchesCuisine && matchesSearch;
@@ -40,7 +47,7 @@ export function RestaurantList() {
       </section>
 
       <div className="browse_chips" role="group" aria-label="Filtrar por culinária">
-        {CUISINES.map((cuisine) => (
+        {cuisines.map((cuisine) => (
           <button
             key={cuisine}
             type="button"
@@ -56,7 +63,7 @@ export function RestaurantList() {
       <div className="browse_list">
         {filtered.length ? (
           filtered.map((restaurant) => {
-            const Icon = restaurant.icon;
+            const Icon = ICONS[restaurant.iconName];
             return (
               // <a> e não <Link>: /restaurant/:id pertence a outra zona.
               <a

@@ -1,8 +1,17 @@
-import { ArrowLeft, Star } from 'lucide-react';
+import { ArrowLeft, Beef, Fish, LucideIcon, Pizza, Sandwich, Star } from 'lucide-react';
 import { cacheLife } from 'next/cache';
+import type { RestaurantIconName } from '@feedme/shared/catalog';
 import { formatBRL } from '@feedme/shared/format';
-import { findRestaurant } from '@feedme/shared/restaurants';
+import { findRestaurant } from '../../../lib/catalog';
 import { AddButton } from '../../add-button';
+
+/** Ícone de cada restaurante. O catálogo guarda só o nome, porque componentes não viajam pela API. */
+const ICONS: Record<RestaurantIconName, LucideIcon> = {
+  beef: Beef,
+  fish: Fish,
+  pizza: Pizza,
+  sandwich: Sandwich,
+};
 
 /**
  * Cardápio de um restaurante. O catálogo é fixo, então o resultado fica em cache.
@@ -16,7 +25,7 @@ export async function RestaurantDetails({ id }: { id: string }) {
   const restaurant = findRestaurant(id);
   if (!restaurant) return null;
 
-  const Icon = restaurant.icon;
+  const Icon = ICONS[restaurant.iconName];
 
   return (
     <>

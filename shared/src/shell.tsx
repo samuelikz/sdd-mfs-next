@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { readCart } from './cart';
+import { readStoredItems } from './cart';
 import { Header } from './header';
 import './tokens.css';
 
@@ -8,8 +8,8 @@ import './tokens.css';
  * Fica em Suspense porque o cookie só existe por requisição, então não entra na casca pré-renderizada.
  */
 async function CartHeader() {
-  const cart = await readCart();
-  return <Header cartCount={cart.length} />;
+  const items = await readStoredItems();
+  return <Header cartCount={items.length} />;
 }
 
 /**

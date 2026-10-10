@@ -24,6 +24,7 @@ const zoneRewrites = (zone: (typeof ZONES)[number]) => [
 
 const nextConfig: NextConfig = {
   rewrites: async () => ZONES.flatMap(zoneRewrites),
+  transpilePackages: ['@feedme/shared'],
 };
 
 export default nextConfig;

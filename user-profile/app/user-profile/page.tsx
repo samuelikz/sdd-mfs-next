@@ -1,6 +1,8 @@
 import { ShoppingCart, User } from 'lucide-react';
-import { readCart } from '@feedme/shared/cart';
+import { readStoredItems } from '@feedme/shared/cart';
+import { fetchCatalog } from '@feedme/shared/catalog';
 import { formatBRL } from '@feedme/shared/format';
+import { resolveEntries } from './cart-entries';
 import { RemoveButton } from './remove-button';
 
 /** Texto no singular ou plural conforme a quantidade. Ex.: "1 item", "3 itens". */
@@ -8,10 +10,11 @@ const pluralizeItems = (count: number) => `${count} ${count === 1 ? 'item' : 'it
 
 /**
  * Zona "UserProfile": perfil e carrinho.
- * Server Component: lê o carrinho do cookie e já entrega a página com o total calculado.
+ * Server Component: lê o cookie e o catálogo da zona de pedidos, e entrega a página com o total calculado.
  */
 export default async function UserProfilePage() {
-  const cart = await readCart();
+  const entries = resolveEntries(await readStoredItems(), await fetchCatalog());
+  const cart = entries.map((entry) => entry.order);
   const total = cart.reduce((sum, order) => sum + order.price * order.quantity, 0);
 
   return (

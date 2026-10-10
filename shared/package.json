@@ -1,14 +1,14 @@
 {
   "name": "@feedme/shared",
   "version": "1.0.0",
-  "description": "Casca visual (header, footer, tokens), carrinho em cookie e catálogo de restaurantes usados por todas as zonas.",
+  "description": "Casca visual (header, footer, tokens), contrato do carrinho em cookie e contrato do catálogo, usados pelas zonas.",
   "private": true,
   "exports": {
     "./shell": "./src/shell.tsx",
     "./cart": "./src/cart.ts",
+    "./catalog": "./src/catalog.ts",
     "./format": "./src/format.ts",
-    "./metadata": "./src/metadata.ts",
-    "./restaurants": "./src/restaurants.ts"
+    "./metadata": "./src/metadata.ts"
   },
   "peerDependencies": {
     "next": "*",

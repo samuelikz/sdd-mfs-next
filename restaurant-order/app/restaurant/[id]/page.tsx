@@ -1,5 +1,5 @@
-import { RESTAURANTS, findRestaurant } from '@feedme/shared/restaurants';
 import { notFound } from 'next/navigation';
+import { RESTAURANTS, findRestaurant } from '../../../lib/catalog';
 import { RestaurantDetails } from './restaurant-details';
 
 /**

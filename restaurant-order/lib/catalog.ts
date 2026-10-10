@@ -1,30 +1,14 @@
-import { Beef, Fish, LucideIcon, Pizza, Sandwich } from 'lucide-react';
+import type { CatalogRestaurant } from '@feedme/shared/catalog';
 
 /**
- * Fonte única dos restaurantes, usada pela zona de busca e pela de pedidos.
- * Num cenário real, estes dados viriam do backend (BFF) de um time dono.
+ * Catálogo de restaurantes. Esta zona é a dona dos dados: outras zonas leem pela API GET /api/restaurants.
  */
-
-export type MenuItem = { name: string; price: number; description: string };
-
-export type Restaurant = {
-  id: number;
-  name: string;
-  cuisine: string;
-  icon: LucideIcon;
-  color: string;
-  rating: number;
-  time: string;
-  tagline: string;
-  items: MenuItem[];
-};
-
-export const RESTAURANTS: Restaurant[] = [
+export const RESTAURANTS: CatalogRestaurant[] = [
   {
     id: 1,
     name: 'Burger Palace',
     cuisine: 'Hambúrguer',
-    icon: Beef,
+    iconName: 'beef',
     color: '#ffe2c6',
     rating: 4.7,
     time: '25-35',
@@ -39,7 +23,7 @@ export const RESTAURANTS: Restaurant[] = [
     id: 2,
     name: 'Sushi Zen',
     cuisine: 'Japonesa',
-    icon: Fish,
+    iconName: 'fish',
     color: '#ffd9df',
     rating: 4.9,
     time: '35-45',
@@ -54,7 +38,7 @@ export const RESTAURANTS: Restaurant[] = [
     id: 3,
     name: 'Cantina da Nonna',
     cuisine: 'Italiana',
-    icon: Pizza,
+    iconName: 'pizza',
     color: '#fff0b8',
     rating: 4.6,
     time: '30-40',
@@ -69,7 +53,7 @@ export const RESTAURANTS: Restaurant[] = [
     id: 4,
     name: 'Taco Loco',
     cuisine: 'Mexicana',
-    icon: Sandwich,
+    iconName: 'sandwich',
     color: '#d7f2d0',
     rating: 4.5,
     time: '20-30',
@@ -82,12 +66,9 @@ export const RESTAURANTS: Restaurant[] = [
   },
 ];
 
-/**
- * Busca por id usando Map, e não objeto literal: chaves como "constructor"
- * ou "toString" não existem no Map, então não viram restaurante por engano.
- */
+/** Busca por id usando Map, e não objeto literal: chaves como "constructor" ou "toString" não viram restaurante. */
 const RESTAURANTS_BY_ID = new Map(RESTAURANTS.map((restaurant) => [String(restaurant.id), restaurant]));
 
-export function findRestaurant(id: string): Restaurant | undefined {
+export function findRestaurant(id: string): CatalogRestaurant | undefined {
   return RESTAURANTS_BY_ID.get(id);
 }
