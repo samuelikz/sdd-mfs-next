@@ -49,9 +49,36 @@
 .user-profile_row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid var(--fm-border);
+}
+
+.user-profile_remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--fm-muted);
+  border: 1px solid var(--fm-border);
+  padding: 6px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: .9rem;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+
+.user-profile_remove:hover:not(:disabled) {
+  color: var(--fm-brand);
+  border-color: var(--fm-brand);
+}
+
+.user-profile_remove:disabled {
+  opacity: .5;
+  cursor: progress;
 }
 
 .user-profile_total {

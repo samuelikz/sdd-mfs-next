@@ -1,6 +1,7 @@
 import { ShoppingCart, User } from 'lucide-react';
 import { readCart } from '@feedme/shared/cart';
 import { formatBRL } from '@feedme/shared/format';
+import { RemoveButton } from './remove-button';
 
 /** Texto no singular ou plural conforme a quantidade. Ex.: "1 item", "3 itens". */
 const pluralizeItems = (count: number) => `${count} ${count === 1 ? 'item' : 'itens'}`;
@@ -35,6 +36,7 @@ export default async function UserProfilePage() {
                   <p className="user-profile_muted">{order.restaurant}</p>
                 </div>
                 <span>{formatBRL(order.price)}</span>
+                <RemoveButton index={index} itemName={order.item} />
               </div>
             ))}
             <div className="user-profile_total">

@@ -33,6 +33,12 @@ export type Order = {
   quantity: number;
 };
 
+/** Item válido: o que foi gravado e o pedido resolvido pelo catálogo, na mesma posição. */
+type CartEntry = {
+  stored: StoredItem;
+  order: Order;
+};
+
 /** Valida um item lido do cookie. Cookie adulterado ou antigo é descartado. */
 function isStoredItem(value: unknown): value is StoredItem {
   if (typeof value !== 'object' || value === null) return false;
@@ -49,7 +55,7 @@ function resolveItem({ restaurantId, itemIndex }: StoredItem): Order | null {
   return { restaurant: restaurant.name, item: item.name, price: item.price, quantity: 1 };
 }
 
-/** Lê os itens gravados no cookie, sem resolver preços. Dados inválidos viram lista vazia. */
+/** Lê os itens gravados no cookie. Dados inválidos viram lista vazia. */
 async function readStoredItems(): Promise<StoredItem[]> {
   const raw = (await cookies()).get(CART_COOKIE)?.value;
   if (!raw) return [];
@@ -62,10 +68,32 @@ async function readStoredItems(): Promise<StoredItem[]> {
   }
 }
 
+/**
+ * Lista do carrinho, já sem itens que o catálogo não reconhece.
+ * Leitura e remoção usam esta mesma lista, então a posição mostrada na tela é a posição do servidor.
+ */
+async function readCartEntries(): Promise<CartEntry[]> {
+  const stored = await readStoredItems();
+  return stored.flatMap((item) => {
+    const order = resolveItem(item);
+    return order ? [{ stored: item, order }] : [];
+  });
+}
+
+/** Grava a lista de itens no cookie. */
+async function writeStoredItems(items: StoredItem[]) {
+  (await cookies()).set(CART_COOKIE, encodeURIComponent(JSON.stringify(items)), {
+    path: '/',
+    maxAge: COOKIE_MAX_AGE_SECONDS,
+    sameSite: 'lax',
+    httpOnly: true,
+  });
+}
+
 /** Lê o carrinho da requisição atual, com nome e preço vindos do catálogo. */
 export async function readCart(): Promise<Order[]> {
-  const orders = await readStoredItems();
-  return orders.map(resolveItem).filter((order): order is Order => order !== null);
+  const entries = await readCartEntries();
+  return entries.map((entry) => entry.order);
 }
 
 /**
@@ -76,16 +104,23 @@ export async function addItemToCart(restaurantId: string, itemIndex: number): Pr
   const restaurant = findRestaurant(restaurantId);
   if (!restaurant || !restaurant.items[itemIndex]) return false;
 
-  const cartItems = await readStoredItems();
-  if (cartItems.length >= MAX_CART_ITEMS) return false;
+  const entries = await readCartEntries();
+  if (entries.length >= MAX_CART_ITEMS) return false;
 
-  const updated: StoredItem[] = [...cartItems, { restaurantId: restaurant.id, itemIndex }];
+  const updated = [...entries.map((entry) => entry.stored), { restaurantId: restaurant.id, itemIndex }];
+  await writeStoredItems(updated);
+  return true;
+}
 
-  (await cookies()).set(CART_COOKIE, encodeURIComponent(JSON.stringify(updated)), {
-    path: '/',
-    maxAge: COOKIE_MAX_AGE_SECONDS,
-    sameSite: 'lax',
-    httpOnly: true,
-  });
+/**
+ * Remove a linha na posição indicada, na mesma numeração de `readCart`.
+ * Posição fora da lista ou não inteira não altera o carrinho.
+ */
+export async function removeItemFromCart(index: number): Promise<boolean> {
+  const entries = await readCartEntries();
+  if (!Number.isInteger(index) || index < 0 || index >= entries.length) return false;
+
+  const kept = entries.filter((_, position) => position !== index).map((entry) => entry.stored);
+  await writeStoredItems(kept);
   return true;
 }
