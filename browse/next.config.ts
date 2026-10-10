@@ -1,0 +1,12 @@
+import type { NextConfig } from 'next';
+
+/**
+ * Zona "browse". O assetPrefix separa os arquivos desta zona (/_next/...)
+ * dos das outras, para o container saber para onde encaminhar cada um.
+ */
+const nextConfig: NextConfig = {
+  assetPrefix: '/browse-static',
+  transpilePackages: ['@feedme/shared'],
+};
+
+export default nextConfig;

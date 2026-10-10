@@ -1,0 +1,19 @@
+{
+  "name": "@feedme/shared",
+  "version": "1.0.0",
+  "description": "Casca visual (header, footer, tokens), carrinho em cookie e catálogo de restaurantes usados por todas as zonas.",
+  "private": true,
+  "exports": {
+    "./shell": "./src/shell.tsx",
+    "./cart": "./src/cart.ts",
+    "./format": "./src/format.ts",
+    "./restaurants": "./src/restaurants.ts"
+  },
+  "peerDependencies": {
+    "next": "*",
+    "react": "*"
+  },
+  "dependencies": {
+    "lucide-react": "^1.55.0"
+  }
+}

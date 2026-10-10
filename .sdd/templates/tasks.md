@@ -1,0 +1,6 @@
+# Tarefas: <nome da feature>
+
+Cada tarefa é pequena e pode ser verificada sozinha.
+
+- [ ] T1: ...  (arquivo: ...)  verificação: ...
+- [ ] T2: ...  (arquivo: ...)  verificação: ...

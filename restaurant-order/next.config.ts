@@ -1,0 +1,12 @@
+import type { NextConfig } from 'next';
+
+/**
+ * Zona "restaurant-order". O assetPrefix separa os arquivos desta zona (/_next/...)
+ * dos das outras, para o container saber para onde encaminhar cada um.
+ */
+const nextConfig: NextConfig = {
+  assetPrefix: '/restaurant-order-static',
+  transpilePackages: ['@feedme/shared'],
+};
+
+export default nextConfig;
