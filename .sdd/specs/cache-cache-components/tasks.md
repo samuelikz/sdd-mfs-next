@@ -6,3 +6,4 @@
 - [x] T4: `RestaurantDetails` com `use cache` e `generateStaticParams`  (arquivos: `restaurant-order/app/restaurant/[id]/restaurant-details.tsx`, `page.tsx`)  verificação: build e smoke.
 - [x] T5: `instant = false` na rota do restaurante, para o 404 ter status certo  (arquivo: `restaurant-order/app/restaurant/[id]/page.tsx`)  verificação: `/restaurant/99` retorna 404.
 - [x] T6: build e smoke em produção  verificação: 7 de 7 passam.
+- [x] T7: `user-profile` sem Cache Components; o `Suspense` do perfil saiu  (arquivos: `user-profile/next.config.ts`, `user-profile/app/user-profile/page.tsx`)  verificação: perfil no dev e em produção.

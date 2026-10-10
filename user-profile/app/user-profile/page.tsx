@@ -1,5 +1,4 @@
 import { ShoppingCart, User } from 'lucide-react';
-import { Suspense } from 'react';
 import { readCart } from '@feedme/shared/cart';
 import { formatBRL } from '@feedme/shared/format';
 import { RemoveButton } from './remove-button';
@@ -8,9 +7,10 @@ import { RemoveButton } from './remove-button';
 const pluralizeItems = (count: number) => `${count} ${count === 1 ? 'item' : 'itens'}`;
 
 /**
- * Conteúdo que depende do carrinho do cookie. Fica fora da página pré-renderizada, então vai em Suspense.
+ * Zona "UserProfile": perfil e carrinho.
+ * Server Component: lê o carrinho do cookie e já entrega a página com o total calculado.
  */
-async function ProfileContent() {
+export default async function UserProfilePage() {
   const cart = await readCart();
   const total = cart.reduce((sum, order) => sum + order.price * order.quantity, 0);
 
@@ -52,17 +52,5 @@ async function ProfileContent() {
         )}
       </section>
     </div>
-  );
-}
-
-/**
- * Zona "UserProfile": perfil e carrinho.
- * A página é pré-renderizada, e o conteúdo do carrinho chega em streaming.
- */
-export default function UserProfilePage() {
-  return (
-    <Suspense fallback={<p className="user-profile_muted">Carregando carrinho…</p>}>
-      <ProfileContent />
-    </Suspense>
   );
 }

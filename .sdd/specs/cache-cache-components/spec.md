@@ -7,9 +7,9 @@ Cada requisição do cardápio refaz o trabalho de montar a página, mesmo com u
 Cachear o que é estático (cardápio) e manter dinâmico o que depende do cookie (carrinho).
 
 ## Requisitos
-- RF1: `cacheComponents` e `partialPrefetching` ativos nas zonas (`browse`, `restaurant-order`, `user-profile`).
+- RF1: `cacheComponents` e `partialPrefetching` ativos em `browse` e `restaurant-order`. `user-profile` fica sem Cache Components, porque o conteúdo é por requisição (cookie) e o modo com Suspense travava no dev.
 - RF2: o cardápio (`RestaurantDetails`) usa `use cache` com `cacheLife('max')`. Recebe só o id, porque argumentos de cache precisam ser serializáveis.
-- RF3: leituras de cookie ficam em `Suspense`: contador do cabeçalho e conteúdo do perfil.
+- RF3: leitura de cookie do contador do cabeçalho fica em `Suspense`. O conteúdo do perfil é renderizado na requisição, sem `Suspense`.
 - RF4: a página do restaurante pré-renderiza os ids do catálogo com `generateStaticParams`, e ids desconhecidos respondem 404.
 - RF5: adicionar ou remover no carrinho não invalida o cache do cardápio.
 
@@ -22,4 +22,4 @@ Cachear o que é estático (cardápio) e manter dinâmico o que depende do cooki
 - [x] Dado `/restaurant/99`, quando acessado, então a resposta é 404.
 - [x] Dado o cardápio pré-renderizado, quando a página é buscada sem cookie, então o HTML já traz os itens.
 - [x] Dado produção (`next start`), quando um item é adicionado e removido, então o cabeçalho e o total atualizam.
-- [ ] Dado o modo dev, quando o perfil carrega, então o conteúdo substitui o fallback "Carregando carrinho…". Pendente: no dev, o fallback não é trocado; em produção funciona.
+- [x] Dado o modo dev, quando o perfil carrega, então o conteúdo aparece (corrigido: `user-profile` saiu do Cache Components).
