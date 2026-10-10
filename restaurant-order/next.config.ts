@@ -7,6 +7,8 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   assetPrefix: '/restaurant-order-static',
   transpilePackages: ['@feedme/shared'],
+  cacheComponents: true,
+  partialPrefetching: true,
 };
 
 export default nextConfig;

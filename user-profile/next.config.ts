@@ -7,6 +7,8 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   assetPrefix: '/user-profile-static',
   transpilePackages: ['@feedme/shared'],
+  cacheComponents: true,
+  partialPrefetching: true,
 };
 
 export default nextConfig;

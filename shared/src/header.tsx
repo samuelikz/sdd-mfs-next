@@ -16,9 +16,9 @@ const isActiveLink = (href: string, path: string) =>
 
 /**
  * Header comum a todas as zonas: logo, navegação e contador do carrinho.
- * O contador chega pronto do servidor (via Shell), então não há flash de "0".
+ * O contador chega do servidor em streaming (via Shell). Enquanto carrega, fica vazio, sem mostrar um "0" falso.
  */
-export function Header({ cartCount }: { cartCount: number }) {
+export function Header({ cartCount }: { cartCount: number | null }) {
   const path = usePathname();
 
   return (
@@ -45,9 +45,9 @@ export function Header({ cartCount }: { cartCount: number }) {
           })}
         </nav>
 
-        <a href="/user-profile" className="container-header_cart" aria-label={`Ver carrinho, ${cartCount} itens`}>
+        <a href="/user-profile" className="container-header_cart" aria-label={cartCount === null ? 'Ver carrinho' : `Ver carrinho, ${cartCount} itens`}>
           <ShoppingCart size={18} aria-hidden="true" />
-          <span aria-live="polite">{cartCount}</span>
+          <span aria-live="polite">{cartCount ?? ''}</span>
         </a>
       </div>
     </header>

@@ -1,14 +1,22 @@
+import { Suspense } from 'react';
 import { readCart } from './cart';
 import { Header } from './header';
 import './tokens.css';
 
 /**
- * Casca comum a todas as zonas: html, header, área principal e footer.
- * É async porque lê o carrinho no servidor para mostrar o contador já na primeira resposta.
+ * Lê o carrinho no servidor e entrega o contador do cabeçalho.
+ * Fica em Suspense porque o cookie só existe por requisição, então não entra na casca pré-renderizada.
  */
-export async function Shell({ children }: { children: React.ReactNode }) {
+async function CartHeader() {
   const cart = await readCart();
+  return <Header cartCount={cart.length} />;
+}
 
+/**
+ * Casca comum a todas as zonas: html, header, área principal e footer.
+ * O contador do cabeçalho chega em streaming, então a casca fica pré-renderizada.
+ */
+export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
       <head>
@@ -19,7 +27,9 @@ export async function Shell({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body>
-        <Header cartCount={cart.length} />
+        <Suspense fallback={<Header cartCount={null} />}>
+          <CartHeader />
+        </Suspense>
         <main className="container-main">{children}</main>
         <footer className="container-footer">Feed me · exemplo de micro frontends com Next.js</footer>
       </body>
